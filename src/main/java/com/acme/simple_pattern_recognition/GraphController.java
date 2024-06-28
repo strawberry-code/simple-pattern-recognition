@@ -1,6 +1,5 @@
 package com.acme.simple_pattern_recognition;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,14 +9,12 @@ import java.util.List;
 @RestController
 public class GraphController {
 
-    @Autowired
-    private GraphService graphService;
-
     @PostMapping("/point")
     public ResponseEntity<?> savePoint(@RequestBody PointRequest pointRequest) {
         try {
             Point point = new Point(pointRequest.getX(), pointRequest.getY());
-            graphService.savePoint(point);
+            Plane plane = Plane.getInstance();
+            plane.addPoint(point);
             ApiResponse<String> response = new ApiResponse<>("Point added successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
@@ -29,9 +26,8 @@ public class GraphController {
     @GetMapping("/lines/{n}")
     public ResponseEntity<ApiResponse<?>> getLinesWithAtLeastNPoints(@PathVariable int n) {
         try {
-            // Better to do havi each combination of points and check if the line has at least n points
-            List<Line> lines = graphService.getAllLines();
-            ApiResponse<List<Line>> response = new ApiResponse<>(lines);
+            List<List<Point>> nTuples = Plane.getInstance().getSegments(n);
+            ApiResponse<List<List<Point>>> response = new ApiResponse<>(nTuples);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             ApiResponse<String> response = new ApiResponse<>("Failed to get lines: " + e.getMessage());
@@ -40,9 +36,9 @@ public class GraphController {
     }
 
     @GetMapping("/point")
-    public ResponseEntity<ApiResponse<?>> getPoint(@RequestParam String id) {
+    public ResponseEntity<ApiResponse<?>> getPoint(@RequestParam int id) {
         try {
-            Point point = graphService.getPoint(id);
+            Point point = Plane.getInstance().getPoint(id);
             ApiResponse<Point> response = new ApiResponse<>(point);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
@@ -54,7 +50,7 @@ public class GraphController {
     @GetMapping("/space")
     public ResponseEntity<ApiResponse<?>> getPoints() {
         try {
-            List<Point> points = graphService.getPoints();
+            List<Point> points = Plane.getInstance().getPoints();
             ApiResponse<List<Point>> response = new ApiResponse<>(points);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
@@ -66,7 +62,7 @@ public class GraphController {
     @GetMapping("/lines")
     public ResponseEntity<ApiResponse<?>> getLines() {
         try {
-            List<Line> lines = graphService.getAllLines();
+            List<Line> lines = Plane.getInstance().getLines();
             ApiResponse<List<Line>> response = new ApiResponse<>(lines);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
@@ -78,7 +74,7 @@ public class GraphController {
     @DeleteMapping("/space")
     public ResponseEntity<ApiResponse<?>> clearAll() {
         try {
-            graphService.clearAll();
+            Plane.getInstance().clearAll();
             ApiResponse<String> response = new ApiResponse<>("All data cleared");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {

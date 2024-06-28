@@ -1,46 +1,38 @@
 package com.acme.simple_pattern_recognition;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
+import java.util.HashSet;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Node
 public class Point {
 
-    @Id
-    private String id;
+    int id;
 
-    @Relationship(type = "CONNECTS")
-    private List<Point> points;
+    // private HashSet<Point> connectedPoints;
+    private HashSet<Integer> connectedPoints;
 
     private float x;
     private float y;
 
     public Point() {
-        this.points = new ArrayList<>();
+        this.connectedPoints = new HashSet<Integer>();
     }
 
     // Constructor, getters and setters
     public Point(float x, float y) {
-        this.points = new ArrayList<Point>();
-        this.id = generateHash(x + "," + y);
+        this.connectedPoints = new HashSet<Integer>();
+        this.id = Plane.getInstance().getPointId();
         this.x = x;
         this.y = y;
     }
 
-    public List<Point> getPoints() {
-        return points;
+    public HashSet<Integer> getConnectedPoints() {
+        return connectedPoints;
     }
 
     public void connectTo(Point point) {
-        this.points.add(point);
+        this.connectedPoints.add(point.id);
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -52,7 +44,4 @@ public class Point {
         return y;
     }
 
-    private String generateHash(String message) {
-        return DigestUtils.sha256Hex(message);
-    }
 }

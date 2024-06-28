@@ -5,8 +5,13 @@ public class Line {
     private Point to;
 
     public Line(Point from, Point to) {
-        this.from = from;
-        this.to = to;
+        if(from.getId() > to.getId()) {
+            this.from = to;
+            this.to = from;
+        } else {
+            this.from = from;
+            this.to = to;
+        }
     }
 
     public Point getFrom() {

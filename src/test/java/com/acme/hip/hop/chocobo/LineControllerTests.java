@@ -1,5 +1,8 @@
-package com.acme.simple_pattern_recognition;
+package com.acme.hip.hop.chocobo;
 
+import com.acme.hip.hop.chocobo.geometry.Point;
+import com.acme.hip.hop.chocobo.rest.ApiResponse;
+import com.acme.hip.hop.chocobo.rest.PointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -94,7 +97,7 @@ public class LineControllerTests {
 
     @Test
     public void testGetLinesWithAtLeastNPoints() throws Exception {
-        int n = 2;
+        int n = 3;
         MvcResult result = mockMvc.perform(get("/lines/{n}", n)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -112,7 +115,7 @@ public class LineControllerTests {
 
         responseContent = result.getResponse().getContentAsString();
         ApiResponse<List<Point>> responsePoints = objectMapper.readValue(responseContent, ApiResponse.class);
-        assertThat(responsePoints.getResponse().size()).isEqualTo(3*(3-1));
+        assertThat(responsePoints.getResponse().size()).isEqualTo(4*(4-1));
         assertThat(responsePoints.getTimestamp()).isNotNull();
     }
 
@@ -131,22 +134,5 @@ public class LineControllerTests {
         assertThat(response.getResponse()).isNotNull();
         assertThat(response.getTimestamp()).isNotNull();
     }
-
-    @Test
-    public void testGetLines() throws Exception {
-        // Save points to the database
-        testSavePoint();
-
-        MvcResult result = mockMvc.perform(get("/lines")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String responseContent = result.getResponse().getContentAsString();
-        ApiResponse<?> response = objectMapper.readValue(responseContent, ApiResponse.class);
-        assertThat(response.getResponse()).isNotNull();
-        assertThat(response.getTimestamp()).isNotNull();
-    }
-
 
 }

@@ -1,24 +1,33 @@
-package com.acme.simple_pattern_recognition;
+package com.acme.hip.hop.chocobo.geometry;
 
 import java.util.HashSet;
 
+/**
+ * Represents a point in a geometric plane, with methods to manage connections
+ * to other points based on their IDs.
+ */
 public class Point {
 
-    int id;
-
-    // private HashSet<Point> connectedPoints;
+    private int id;
     private HashSet<Integer> connectedPoints;
-
     private float x;
     private float y;
 
+    /**
+     * Default constructor that initializes the connections set.
+     */
     public Point() {
-        this.connectedPoints = new HashSet<Integer>();
+        this.connectedPoints = new HashSet<>();
     }
 
-    // Constructor, getters and setters
+    /**
+     * Constructs a point with specified coordinates.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     */
     public Point(float x, float y) {
-        this.connectedPoints = new HashSet<Integer>();
+        this();
         this.id = Plane.getInstance().getPointId();
         this.x = x;
         this.y = y;
@@ -28,6 +37,11 @@ public class Point {
         return connectedPoints;
     }
 
+    /**
+     * Connects this point to another point.
+     *
+     * @param point the point to connect to
+     */
     public void connectTo(Point point) {
         this.connectedPoints.add(point.id);
     }
@@ -43,5 +57,4 @@ public class Point {
     public float getY() {
         return y;
     }
-
 }

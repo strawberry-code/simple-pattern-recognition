@@ -1,54 +1,57 @@
-package com.acme.simple_pattern_recognition;
+package com.acme.hip.hop.chocobo.geometry;
 
-import javax.swing.text.Segment;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Manages a geometric plane with a unique instance. Supports operations to add points,
+ * retrieve points, and generate combinations of points.
+ */
 public class Plane {
 
-    // Instanza unica della classe, inizializzata durante il caricamento della classe
     private static final Plane INSTANCE = new Plane();
-
     private static final HashSet<Point> points = new HashSet<>();
-    private static final HashSet<Line> lines = new HashSet<>();
-    // private static final HashSet<Segment> segments = new HashSet<>();
     private int lastPointId = 0;
-    // private int lastLineId = 0;
-    // private int lastSegmentId = 0;
 
-    // Costruttore privato per evitare l'istanziazione esterna
     private Plane() {
-        // Inizializzazione della risorsa se necessario
+        // Private constructor to prevent external instantiation.
     }
 
-    // Metodo per ottenere l'istanza unica della classe
+    /**
+     * Returns the single instance of this class.
+     */
     public static Plane getInstance() {
         return INSTANCE;
     }
 
-
-    public static void main(String[] args) {
-        Plane plane = Plane.getInstance();
-    }
-
+    /**
+     * Adds a new point to the plane and connects it bidirectionally with all existing points.
+     * @param newPoint the new point to add
+     */
     public void addPoint(Point newPoint) {
         points.add(newPoint);
         for (Point point : points) {
             if (point.getId() != newPoint.getId()) {
-
                 point.connectTo(newPoint);
-                newPoint.connectTo(point); // Bidirezionale
-                // lines.add(new Line(point, newPoint));
-                // segments.add(new Segment(point, newPoint)); // Aggiungi ricorsivamente segmenti
+                newPoint.connectTo(point); // Ensure bidirectional connection
             }
         }
     }
 
+    /**
+     * Retrieves a list of all points on the plane.
+     * @return a list of all points
+     */
     public ArrayList<Point> getPoints() {
         return new ArrayList<>(points);
     }
 
+    /**
+     * Returns the point with the specified ID, if it exists.
+     * @param id the ID of the point to retrieve
+     * @return the point with the specified ID, or null if not found
+     */
     public Point getPoint(int id) {
         for (Point point : points) {
             if (point.getId() == id) {
@@ -58,6 +61,11 @@ public class Plane {
         return null;
     }
 
+    /**
+     * Generates all possible combinations of points of a given size.
+     * @param n the number of points in each combination
+     * @return a list of point combinations
+     */
     public List<List<Point>> getSegments(int n) {
         List<List<Point>> result = new ArrayList<>();
         ArrayList<Point> data = new ArrayList<>(n);
@@ -75,24 +83,25 @@ public class Plane {
             result.add(combination);
             return;
         }
-
         for (int i = start; i <= end && end - i + 1 >= r - index; i++) {
             data.set(index, arr.get(i));
             combinations(arr, data, i + 1, end, index + 1, r, result);
         }
     }
 
+    /**
+     * Provides a unique ID for a new point and increments the internal counter.
+     * @return a unique point ID
+     */
     public int getPointId() {
         return this.lastPointId++;
     }
 
-    public List<Line> getLines() {
-        return new ArrayList<>(lines);
-    }
-
+    /**
+     * Clears all points from the plane and resets the ID counter.
+     */
     public void clearAll() {
         points.clear();
-        lines.clear();
         lastPointId = 0;
     }
 }

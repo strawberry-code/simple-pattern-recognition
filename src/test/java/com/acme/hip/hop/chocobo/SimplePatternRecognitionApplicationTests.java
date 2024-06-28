@@ -1,4 +1,4 @@
-package com.acme.simple_pattern_recognition;
+package com.acme.hip.hop.chocobo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.acme.simple_pattern_recognition;
+package com.acme.hip.hop.chocobo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

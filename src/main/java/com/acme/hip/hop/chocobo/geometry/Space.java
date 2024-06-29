@@ -5,28 +5,28 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Manages a geometric plane with a unique instance. Supports operations to add points,
+ * Manages a geometric space with a unique instance. Supports operations to add points,
  * retrieve points, and generate combinations of points.
  */
-public class Plane {
+public class Space {
 
-    private static final Plane INSTANCE = new Plane();
+    private static final Space INSTANCE = new Space();
     private static final HashSet<Point> points = new HashSet<>();
     private int lastPointId = 0;
 
-    private Plane() {
+    private Space() {
         // Private constructor to prevent external instantiation.
     }
 
     /**
      * Returns the single instance of this class.
      */
-    public static Plane getInstance() {
+    public static Space getInstance() {
         return INSTANCE;
     }
 
     /**
-     * Adds a new point to the plane and connects it bidirectionally with all existing points.
+     * Adds a new point to the space and connects it bidirectionally with all existing points.
      * @param newPoint the new point to add
      */
     public void addPoint(Point newPoint) {
@@ -40,7 +40,7 @@ public class Plane {
     }
 
     /**
-     * Retrieves a list of all points on the plane.
+     * Retrieves a list of all points on the space.
      * @return a list of all points
      */
     public ArrayList<Point> getPoints() {
@@ -98,7 +98,7 @@ public class Plane {
     }
 
     /**
-     * Clears all points from the plane and resets the ID counter.
+     * Clears all points from the space and resets the ID counter.
      */
     public void clearAll() {
         points.clear();

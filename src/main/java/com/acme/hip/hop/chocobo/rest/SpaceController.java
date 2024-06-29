@@ -1,6 +1,6 @@
 package com.acme.hip.hop.chocobo.rest;
 
-import com.acme.hip.hop.chocobo.geometry.Plane;
+import com.acme.hip.hop.chocobo.geometry.Space;
 import com.acme.hip.hop.chocobo.geometry.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * REST Controller for managing points on a geometric plane.
+ * REST Controller for managing points on a geometric space.
  */
 @RestController
-public class PlaneController {
+public class SpaceController {
 
     /**
-     * Adds a point to the geometric plane based on provided coordinates.
+     * Adds a point to the geometric space based on provided coordinates.
      * @param pointRequest the request body containing x and y coordinates of the point.
      * @return ResponseEntity containing the outcome of the operation.
      */
@@ -23,7 +23,7 @@ public class PlaneController {
     public ResponseEntity<ApiResponse<String>> addPoint(@RequestBody PointRequest pointRequest) {
         try {
             Point point = new Point(pointRequest.getX(), pointRequest.getY());
-            Plane.getInstance().addPoint(point);
+            Space.getInstance().addPoint(point);
             return ResponseEntity.ok(new ApiResponse<>("Point added successfully."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Failed to add point: " + e.getMessage()));
@@ -38,7 +38,7 @@ public class PlaneController {
     @GetMapping("/lines/{n}")
     public ResponseEntity<ApiResponse<?>> getLinesWithAtLeastNPoints(@PathVariable int n) {
         try {
-            List<List<Point>> nTuples = Plane.getInstance().getSegments(n);
+            List<List<Point>> nTuples = Space.getInstance().getSegments(n);
             return ResponseEntity.ok(new ApiResponse<>(nTuples));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Failed to get lines: " + e.getMessage()));
@@ -53,7 +53,7 @@ public class PlaneController {
     @GetMapping("/point")
     public ResponseEntity<ApiResponse<?>> getPointById(@RequestParam int id) {
         try {
-            Point point = Plane.getInstance().getPoint(id);
+            Point point = Space.getInstance().getPoint(id);
             return ResponseEntity.ok(new ApiResponse<>(point));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Failed to retrieve point: " + e.getMessage()));
@@ -61,13 +61,13 @@ public class PlaneController {
     }
 
     /**
-     * Retrieves all points on the plane.
+     * Retrieves all points on the space.
      * @return ResponseEntity containing all points or an error message.
      */
     @GetMapping("/space")
     public ResponseEntity<ApiResponse<?>> getAllPoints() {
         try {
-            List<Point> points = Plane.getInstance().getPoints();
+            List<Point> points = Space.getInstance().getPoints();
             return ResponseEntity.ok(new ApiResponse<>(points));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Failed to retrieve points: " + e.getMessage()));
@@ -75,13 +75,13 @@ public class PlaneController {
     }
 
     /**
-     * Clears all points from the geometric plane.
+     * Clears all points from the geometric space.
      * @return ResponseEntity indicating success or failure.
      */
     @DeleteMapping("/space")
     public ResponseEntity<ApiResponse<String>> clearAllPoints() {
         try {
-            Plane.getInstance().clearAll();
+            Space.getInstance().clearAll();
             return ResponseEntity.ok(new ApiResponse<>("All data cleared successfully."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Failed to clear all data: " + e.getMessage()));

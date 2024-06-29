@@ -3,7 +3,7 @@ package com.acme.hip.hop.chocobo.geometry;
 import java.util.HashSet;
 
 /**
- * Represents a point in a geometric plane, with methods to manage connections
+ * Represents a point in a geometric space, with methods to manage connections
  * to other points based on their IDs.
  */
 public class Point {
@@ -28,7 +28,7 @@ public class Point {
      */
     public Point(float x, float y) {
         this();
-        this.id = Plane.getInstance().getPointId();
+        this.id = Space.getInstance().getPointId();
         this.x = x;
         this.y = y;
     }

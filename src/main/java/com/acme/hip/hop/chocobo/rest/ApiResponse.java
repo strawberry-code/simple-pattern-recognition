@@ -1,6 +1,7 @@
 package com.acme.hip.hop.chocobo.rest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Generic API response container class.
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 public class ApiResponse<T> {
     private T response;
     private LocalDateTime timestamp;
+    private Long count;  // Optional count field
 
     /**
      * Default constructor.
@@ -18,11 +20,17 @@ public class ApiResponse<T> {
 
     /**
      * Constructs an ApiResponse with a response object and sets the current timestamp.
+     * Also initializes 'count' if 'response' is a List.
      * @param response the response object
      */
     public ApiResponse(T response) {
         this.response = response;
         this.timestamp = LocalDateTime.now();  // Automatically sets the response time
+
+        // Set count if response is a List
+        if (response instanceof List) {
+            this.count = (long)((List<?>) response).size();
+        }
     }
 
     /**
@@ -35,10 +43,16 @@ public class ApiResponse<T> {
 
     /**
      * Sets the response object.
+     * If 'response' is a List, 'count' is also updated.
      * @param response the new response object to set
      */
     public void setResponse(T response) {
         this.response = response;
+        if (response instanceof List) {
+            this.count = (long)((List<?>) response).size();
+        } else {
+            this.count = null;  // Reset count if not a List
+        }
     }
 
     /**
@@ -55,5 +69,13 @@ public class ApiResponse<T> {
      */
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    /**
+     * Returns the optional count of elements if the response is a list.
+     * @return the count or null if not applicable
+     */
+    public Long getCount() {
+        return count;
     }
 }

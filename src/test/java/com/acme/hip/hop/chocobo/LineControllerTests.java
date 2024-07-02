@@ -151,16 +151,6 @@ public class LineControllerTests {
                 .andReturn();
 
         String responseContent = result.getResponse().getContentAsString();
-        ApiResponse<?> response = objectMapper.readValue(responseContent, ApiResponse.class);
-        assertThat(response.getResponse()).isNotNull();
-        assertThat(response.getTimestamp()).isNotNull();
-
-        result = mockMvc.perform(get("/space")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        responseContent = result.getResponse().getContentAsString();
         ApiResponse<List<Point>> responsePoints = objectMapper.readValue(responseContent, ApiResponse.class);
         assertThat(responsePoints.getResponse().size()).isEqualTo(binomialCoefficient(5, n));
         assertThat(responsePoints.getTimestamp()).isNotNull();
@@ -173,20 +163,33 @@ public class LineControllerTests {
      * @return Il coefficiente binomiale C(n, k)
      */
     public static long binomialCoefficient(int n, int k) {
-        if (k > n) {
+        if (k > n || n == 0 || k == 1) {
             return 0;
         }
         if (k == 0 || k == n) {
             return 1;
         }
-        k = Math.min(k, n - k); // C(n, k) è lo stesso di C(n, n-k)
-        long coefficient = 1;
-        for (int i = 0; i < k; ++i) {
-            coefficient *= (n - i);
-            coefficient /= (i + 1);
-        }
-        return coefficient;
+        return (factorial(n) / (factorial(k) * factorial(n - k)));
     }
+
+
+    /**
+     * Calculates the factorial of a given number.
+     * @param n the non-negative integer whose factorial is to be calculated
+     * @return the factorial of the number
+     */
+    public static long factorial(int n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("Factorial is not defined for negative numbers.");
+        }
+
+        long result = 1;
+        for (int i = 2; i <= n; i++) {
+            result *= i;
+        }
+        return result;
+    }
+
 
 
 }

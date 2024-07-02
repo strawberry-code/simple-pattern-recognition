@@ -6,73 +6,60 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashSet;
 
 /**
- * Represents a point in a geometric space, with methods to manage connections
- * to other points based on their IDs.
+ * Represents a point in a geometric space. Provides functionality to manage connections
+ * to other points based on their unique IDs.
  */
 public class Point {
 
     private static final Logger logger = LogManager.getLogger(Point.class);
 
     private int id;
-    private HashSet<Integer> connectedPoints;
-    private boolean visited;
     private float x;
     private float y;
 
     /**
-     * Default constructor that initializes the connections set.
+     * Default constructor for creating a point with uninitialized coordinates.
+     * The point created is not connected to any other points initially.
      */
     public Point() {
-        this.connectedPoints = new HashSet<>();
+        // Intentionally empty
     }
 
     /**
-     * Constructs a point with specified coordinates.
+     * Constructs a point with specified x and y coordinates.
+     * Automatically assigns a unique ID to the point from the Space singleton.
      *
-     * @param x the x-coordinate
-     * @param y the y-coordinate
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
      */
     public Point(float x, float y) {
-        this();
+        this(); // Initialize with the default constructor
         this.id = Space.getInstance().getPointId();
         this.x = x;
         this.y = y;
     }
 
-    public HashSet<Integer> getConnectedPoints() {
-        return connectedPoints;
-    }
-
     /**
-     * Connects this point to another point.
-     *
-     * @param point the point to connect to
+     * Returns the unique ID of the point.
+     * @return the ID of the point
      */
-    public void connectTo(Point point) {
-        this.connectedPoints.add(point.id);
-    }
-
     public int getId() {
         return id;
     }
 
+    /**
+     * Returns the x-coordinate of the point.
+     * @return the x-coordinate
+     */
     public float getX() {
         return x;
     }
 
+    /**
+     * Returns the y-coordinate of the point.
+     * @return the y-coordinate
+     */
     public float getY() {
         return y;
-    }
-
-    public boolean isVisited() {
-        return visited;
-    }
-
-    public void setVisited() {
-        this.visited = true;
-    }
-
-    public void setUnvisited() {
-        this.visited = false;
     }
 }

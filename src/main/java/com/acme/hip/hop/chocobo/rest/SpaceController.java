@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * REST Controller for managing points on a geometric space.
+ * Provides endpoints to add points, retrieve points, and generate lines (segments).
  */
 @RestController
 public class SpaceController {

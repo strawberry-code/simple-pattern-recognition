@@ -69,12 +69,26 @@ public class Space {
         return null;
     }
 
+    /**
+     * Generates all possible combinations of points of a given size recursively.
+     * @param input the list of points in the Space to be combined
+     * @param k the number of points in each combination (segments)
+     * @return
+     */
     public static List<List<Point>> combinaRicorsivamente(ArrayList<Point> input, int k) {
         List<List<Point>> risultati = new ArrayList<>();
         combina(input, 0, k, new ArrayList<>(), risultati);
         return risultati;
     }
 
+    /**
+     * Generates all possible combinations of points of a given size recursively.
+     * @param input the list of points in the Space to be combined
+     * @param start the index of the first element to consider
+     * @param k the number of points in each combination (segments)
+     * @param attuale the current combination of points
+     * @param risultati the list of all combinations generated
+     */
     private static void combina(ArrayList<Point> input, int start, int k, List<Point> attuale, List<List<Point>> risultati) {
         // Se la combinazione ha raggiunto la dimensione desiderata
         if (k == 0) {
@@ -90,6 +104,12 @@ public class Space {
         }
     }
 
+    /**
+     * Generates all possible combinations of points of a given size iteratively.
+     * @param input the list of points in the Space to be combined
+     * @param k the number of points in each combination (segments)
+     * @return a list of point combinations
+     */
     public static List<List<Point>> combinaIterativamente(List<Point> input, int k) {
         List<List<Point>> risultati = new ArrayList<>();
         int n = input.size();
@@ -152,6 +172,11 @@ public class Space {
         lastPointId = 0;
     }
 
+    /**
+     * Returns the next available unique ID for a point. It will be incremented each time it is called and wil be set to zero when the space is cleared.
+     *
+     * @return the next available point ID
+     */
     public int getPointId() {
         return lastPointId++;
     }

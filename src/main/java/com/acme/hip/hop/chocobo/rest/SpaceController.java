@@ -4,6 +4,8 @@ import com.acme.hip.hop.chocobo.config.AppConfig;
 import com.acme.hip.hop.chocobo.geometry.Space;
 import com.acme.hip.hop.chocobo.geometry.Point;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +122,48 @@ public class SpaceController {
         } catch (Exception e) {
             logger.error("Failed to clear all data: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Failed to clear all data: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Change the combination mode between 'recursive' and 'iterative'.
+     * @param mode The combination mode to set. Allowed values are "recursive" or "iterative".
+     */
+    @Operation(summary = "Change the combination mode between 'recursive' and 'iterative'",
+            description = "Allows changing the combination mode used in the application to either 'recursive' or 'iterative'.")
+    @PostMapping("/mode")
+    public ResponseEntity<ApiResponse<String>> changeMode(
+            @Parameter(description = "Combination mode to be set. Valid values are 'recursive' and 'iterative'.",
+                    required = true,
+                    schema = @Schema(implementation = String.class, allowableValues = {"recursive", "iterative"},
+                            example = "iterative"))
+            @RequestParam String mode) {
+        try {
+            logger.info("Changing combination mode to {}", mode);
+            appConfig.setCombinationMode(mode);
+            logger.info("Combination mode changed successfully");
+            return ResponseEntity.ok(new ApiResponse<>("Combination mode changed successfully."));
+        } catch (Exception e) {
+            logger.error("Failed to change combination mode: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Failed to change combination mode: " + e.getMessage()));
+        }
+    }
+
+
+    /**
+     * Get the current combination mode.
+     */
+    @Operation(summary = "Get the current combination mode")
+    @GetMapping("/mode")
+    public ResponseEntity<ApiResponse<String>> getMode() {
+        try {
+            logger.info("Getting the current combination mode");
+            String mode = appConfig.getCombinationMode();
+            logger.info("Current combination mode: {}", mode);
+            return ResponseEntity.ok(new ApiResponse<>(mode));
+        } catch (Exception e) {
+            logger.error("Failed to get the current combination mode: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Failed to get the current combination mode: " + e.getMessage()));
         }
     }
 }

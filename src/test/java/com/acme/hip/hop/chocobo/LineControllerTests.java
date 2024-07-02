@@ -4,8 +4,7 @@ import com.acme.hip.hop.chocobo.geometry.Point;
 import com.acme.hip.hop.chocobo.rest.ApiResponse;
 import com.acme.hip.hop.chocobo.rest.PointRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // Reset context after each test
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LineControllerTests {
 
     @Autowired
@@ -37,7 +37,8 @@ public class LineControllerTests {
         // Inizializza il contesto di test
     }
 
-    //@Test
+    @Test
+    @Order(1)
     public void testClearAll() throws Exception {
         // Save points to the database
         testSavePoint();
@@ -49,7 +50,7 @@ public class LineControllerTests {
 
         String responseContent = result.getResponse().getContentAsString();
         ApiResponse<?> response = objectMapper.readValue(responseContent, ApiResponse.class);
-        assertThat(response.getResponse()).isEqualTo("All data cleared");
+        assertThat(response.getResponse()).isEqualTo("All data cleared successfully.");
         assertThat(response.getTimestamp()).isNotNull();
 
         result = mockMvc.perform(get("/space")
@@ -65,14 +66,62 @@ public class LineControllerTests {
     }
 
     @Test
+    @Order(2)
     public void testSavePoint() throws Exception {
         testSavePoint(1f, 6f);
-        testSavePoint(2f, 7f); // Add points needed for this test
-        testSavePoint(3f, 8f); // Add points needed for this test
-        // testSavePoint(4f, 9f); // Add points needed for this test
-        // testSavePoint(5f, 10f); // Add points needed for this test
+        testSavePoint(2f, 7f);
+        testSavePoint(3f, 8f);
+        testSavePoint(4f, 9f);
+        testSavePoint(5f, 10f);
     }
 
+    @Test
+    @Order(3)
+    public void testGetSpace() throws Exception {
+        MvcResult result = mockMvc.perform(get("/space")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        ApiResponse<List<Point>> response = objectMapper.readValue(responseContent, ApiResponse.class);
+        assertThat(response.getResponse().size()).isEqualTo(5);
+        assertThat(response.getTimestamp()).isNotNull();
+    }
+
+    @Test
+    @Order(4)
+    public void testGetLinesWithAtLeast1Points() throws Exception {
+        testGetLinesWithAtLeastNPoints(1);
+    }
+
+
+    @Test
+    @Order(5)
+    public void testGetLinesWithAtLeast2Points() throws Exception {
+        testGetLinesWithAtLeastNPoints(2);
+    }
+
+
+    @Test
+    @Order(6)
+    public void testGetLinesWithAtLeast3Points() throws Exception {
+        testGetLinesWithAtLeastNPoints(3);
+    }
+
+
+    @Test
+    @Order(7)
+    public void testGetLinesWithAtLeast4Points() throws Exception {
+        testGetLinesWithAtLeastNPoints(4);
+    }
+
+
+    @Test
+    @Order(8)
+    public void testGetLinesWithAtLeast5Points() throws Exception {
+        testGetLinesWithAtLeastNPoints(5);
+    }
 
     public void testSavePoint(float x, float y) throws Exception {
         if(x == 0.0f && y == 0.0f) {
@@ -95,9 +144,7 @@ public class LineControllerTests {
         assertThat(response.getTimestamp()).isNotNull();
     }
 
-    @Test
-    public void testGetLinesWithAtLeastNPoints() throws Exception {
-        int n = 3;
+    public void testGetLinesWithAtLeastNPoints(int n) throws Exception {
         MvcResult result = mockMvc.perform(get("/lines/{n}", n)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -115,24 +162,31 @@ public class LineControllerTests {
 
         responseContent = result.getResponse().getContentAsString();
         ApiResponse<List<Point>> responsePoints = objectMapper.readValue(responseContent, ApiResponse.class);
-        assertThat(responsePoints.getResponse().size()).isEqualTo(4*(4-1));
+        assertThat(responsePoints.getResponse().size()).isEqualTo(binomialCoefficient(5, n));
         assertThat(responsePoints.getTimestamp()).isNotNull();
     }
 
-    @Test
-    public void testGetSpace() throws Exception {
-        // Save points to the database
-        testSavePoint();
-
-        MvcResult result = mockMvc.perform(get("/space")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String responseContent = result.getResponse().getContentAsString();
-        ApiResponse<?> response = objectMapper.readValue(responseContent, ApiResponse.class);
-        assertThat(response.getResponse()).isNotNull();
-        assertThat(response.getTimestamp()).isNotNull();
+    /**
+     * Calcola il coefficiente binomiale C(n, k) = n! / (k! * (n-k)!)
+     * @param n Il numero totale di elementi
+     * @param k Il numero di elementi in ogni combinazione
+     * @return Il coefficiente binomiale C(n, k)
+     */
+    public static long binomialCoefficient(int n, int k) {
+        if (k > n) {
+            return 0;
+        }
+        if (k == 0 || k == n) {
+            return 1;
+        }
+        k = Math.min(k, n - k); // C(n, k) è lo stesso di C(n, n-k)
+        long coefficient = 1;
+        for (int i = 0; i < k; ++i) {
+            coefficient *= (n - i);
+            coefficient /= (i + 1);
+        }
+        return coefficient;
     }
+
 
 }

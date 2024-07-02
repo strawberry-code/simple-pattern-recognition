@@ -5,6 +5,7 @@ package com.acme.hip.hop.chocobo.rest;
  * encapsulating the x and y coordinates.
  */
 public class PointRequest {
+
     private float x;
     private float y;
 

@@ -77,6 +77,16 @@
             <artifactId>spring-boot-starter-data-neo4j</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -100,7 +110,6 @@
                 </executions>
                 <configuration>
                     <charset>UTF-8</charset>
-                    <docEncoding>UTF-8</docEncoding>
                     <outputDirectory>${project.build.directory}/docs</outputDirectory>
                 </configuration>
             </plugin>

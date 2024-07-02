@@ -1,5 +1,8 @@
 package com.acme.hip.hop.chocobo.geometry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashSet;
 
 /**
@@ -8,8 +11,11 @@ import java.util.HashSet;
  */
 public class Point {
 
+    private static final Logger logger = LogManager.getLogger(Point.class);
+
     private int id;
     private HashSet<Integer> connectedPoints;
+    private boolean visited;
     private float x;
     private float y;
 
@@ -56,5 +62,17 @@ public class Point {
 
     public float getY() {
         return y;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited() {
+        this.visited = true;
+    }
+
+    public void setUnvisited() {
+        this.visited = false;
     }
 }

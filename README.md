@@ -5,7 +5,7 @@ This repository contains a Java-based system for managing geometric points on a 
 
 ## Features
 - **Point Management**: Add and retrieve points with their x and y coordinates.
-- **Connection Management**: Automatically manage connections between points when added to the space.
+- **Connection Management**: Automatically manage connections between points when required.
 - **RESTful API**: Interact with the geometric space through a well-defined REST API.
 - **Error Handling**: Comprehensive error handling across the API to ensure stability and reliability. 
 

@@ -54,7 +54,11 @@ public class AppConfig {
      * @param combinationMode the combination mode to set
      */
     public void setCombinationMode(String combinationMode) {
-        this.combinationMode = combinationMode;
+        if (!combinationMode.equals("recursive") && !combinationMode.equals("iterative")) {
+            throw new IllegalArgumentException("Invalid mode: " + combinationMode + ". Valid modes are 'recursive' and 'iterative'.");
+        } else {
+            this.combinationMode = combinationMode;
+        }
     }
 
 }

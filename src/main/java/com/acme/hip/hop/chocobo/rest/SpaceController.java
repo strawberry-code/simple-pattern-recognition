@@ -3,6 +3,7 @@ package com.acme.hip.hop.chocobo.rest;
 import com.acme.hip.hop.chocobo.config.AppConfig;
 import com.acme.hip.hop.chocobo.geometry.Space;
 import com.acme.hip.hop.chocobo.geometry.Point;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class SpaceController {
      * @param pointRequest the request body containing x and y coordinates of the point.
      * @return ResponseEntity containing the outcome of the operation.
      */
+    @Operation(summary = "Add a point to the geometric space")
     @PostMapping("/point")
     public ResponseEntity<ApiResponse<String>> addPoint(@RequestBody PointRequest pointRequest) {
         try {
@@ -52,6 +54,7 @@ public class SpaceController {
      * @param n the minimum number of points to form a line.
      * @return ResponseEntity containing lines or an error message.
      */
+    @Operation(summary = "Get lines with at least 'n' points")
     @GetMapping("/lines/{n}")
     public ResponseEntity<ApiResponse<?>> getLinesWithAtLeastNPoints(@PathVariable int n) {
         try {
@@ -70,6 +73,7 @@ public class SpaceController {
      * @param id the ID of the point to retrieve.
      * @return ResponseEntity containing the point or an error message.
      */
+    @Operation(summary = "Get a point by its ID")
     @GetMapping("/point")
     public ResponseEntity<ApiResponse<?>> getPointById(@RequestParam int id) {
         try {
@@ -87,6 +91,7 @@ public class SpaceController {
      * Retrieves all points on the space.
      * @return ResponseEntity containing all points or an error message.
      */
+    @Operation(summary = "Get all points on the geometric space")
     @GetMapping("/space")
     public ResponseEntity<ApiResponse<?>> getAllPoints() {
         try {
@@ -104,6 +109,7 @@ public class SpaceController {
      * Clears all points from the geometric space.
      * @return ResponseEntity indicating success or failure.
      */
+    @Operation(summary = "Clear all points from the geometric space", description = "This operation cannot be undone.")
     @DeleteMapping("/space")
     public ResponseEntity<ApiResponse<String>> clearAllPoints() {
         try {
